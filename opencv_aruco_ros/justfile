@@ -1,0 +1,4 @@
+build:
+    colcon build --packages-select opencv_aruco_ros
+
+run: ros2 run opencv_aruco_ros main
