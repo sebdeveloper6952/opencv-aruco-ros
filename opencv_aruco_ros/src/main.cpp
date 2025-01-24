@@ -48,14 +48,6 @@ public:
         this->create_publisher<opencv_aruco_ros_msgs::msg::MarkerArray>(
             "/opencv_aruco_ros/markers", 10);
 
-    // load camera calibration params
-    if (!readCameraParameters("camera_calibration.yaml", camMatrix,
-                              distCoeffs)) {
-      RCLCPP_ERROR(this->get_logger(),
-                   "could not load camera calibration parameters.");
-      exit(1);
-    }
-
     // set coordinate system
     objPoints.ptr<cv::Vec3f>(0)[0] =
         cv::Vec3f(-markerLength / 2.f, markerLength / 2.f, 0);
@@ -134,18 +126,6 @@ private:
     // for aiding in debugging, draw stuff on the output frame
     cv::imshow("window", outputImage);
     cv::waitKey(1);
-  }
-
-  // readCameraParameters will read a YAML file `filename` and fill the matrices
-  // `camMatrix` & `distCoeffs` with the values read from file
-  bool readCameraParameters(std::string filename, cv::Mat &camMatrix,
-                            cv::Mat &distCoeffs) {
-    cv::FileStorage fs(filename, cv::FileStorage::READ);
-    if (!fs.isOpened())
-      return false;
-    fs["camera_matrix"] >> camMatrix;
-    fs["distortion_coefficients"] >> distCoeffs;
-    return true;
   }
 };
 
