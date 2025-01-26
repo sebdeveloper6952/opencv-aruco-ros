@@ -109,8 +109,8 @@ private:
 
       for (int j = 0; j < 4; j++) {
         auto point = geometry_msgs::msg::Point();
-        point.x = markerCorners.at(0).at(j).x;
-        point.y = markerCorners.at(0).at(j).y;
+        point.x = markerCorners.at(i).at(j).x;
+        point.y = markerCorners.at(i).at(j).y;
         marker.corners[j] = point;
       }
 
