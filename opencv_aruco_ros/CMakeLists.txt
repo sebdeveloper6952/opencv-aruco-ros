@@ -46,8 +46,18 @@ ament_target_dependencies(
     image_transport
 )
 
+add_executable(record src/calib.cpp)
+ament_target_dependencies(
+    record
+    rclcpp
+    std_msgs
+    sensor_msgs 
+    cv_bridge
+    image_transport
+)
+
 install(
-    TARGETS main calib
+    TARGETS main calib record
     DESTINATION lib/${PROJECT_NAME}
 )
 
