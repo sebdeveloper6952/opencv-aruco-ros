@@ -46,7 +46,7 @@ ament_target_dependencies(
     image_transport
 )
 
-add_executable(record src/calib.cpp)
+add_executable(record src/record.cpp)
 ament_target_dependencies(
     record
     rclcpp
@@ -54,6 +54,7 @@ ament_target_dependencies(
     sensor_msgs 
     cv_bridge
     image_transport
+    opencv_aruco_ros_msgs
 )
 
 install(

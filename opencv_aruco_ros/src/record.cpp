@@ -16,6 +16,7 @@
 #include <functional>
 #include <memory>
 #include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
 #include <rclcpp/logging.hpp>
 #include <string>
 
@@ -53,10 +54,18 @@ public:
     objPoints.ptr<cv::Vec3f>(0)[3] =
         cv::Vec3f(-markerLength / 2.f, -markerLength / 2.f, 0);
 
+    int codec = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
+    cv::Size size = cv::Size(640, 480);
+    vidWriter.open("vid.avi", codec, 25.0, size, true);
+
     RCLCPP_INFO(this->get_logger(), "running...");
   }
 
-  ~MinimalNode() {}
+  ~MinimalNode() {
+    if (vidWriter.isOpened()) {
+      vidWriter.release();
+    }
+  }
 
 private:
   // ros camera subscription
@@ -76,8 +85,8 @@ private:
   double markerLength = 200.0f;
   cv::Mat objPoints = cv::Mat(4, 1, CV_32FC3);
 
-  // camera calibration params
-  cv::Mat camMatrix, distCoeffs;
+  // record video
+  cv::VideoWriter vidWriter;
 
   void img_callback(const sensor_msgs::msg::Image::ConstSharedPtr &msg) {
     cv_bridge::CvImagePtr cv_ptr;
@@ -111,6 +120,7 @@ private:
     // copy image to draw debug info
     cv::Mat outputImage = cv_ptr->image.clone();
     cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
+    vidWriter.write(outputImage);
   }
 };
 
